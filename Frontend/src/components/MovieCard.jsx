@@ -1,4 +1,5 @@
-function MovieCard({
+import "./MovieCard.css";
+ function MovieCard({
   movie,
   setSelectedMovie,
   addToWatchlist,
