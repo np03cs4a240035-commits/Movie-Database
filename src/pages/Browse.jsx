@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import initialMovies from "../data/movies";
 import MovieGrid from "../components/MovieGrid";
 import MovieDetail from "../components/MovieDetail";
@@ -9,66 +9,65 @@ function Browse({ watchlist, setWatchlist }) {
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [search, setSearch] = useState("");
 
-  // Add new movie
+  // Dashboard states
+  const [totalMovies, setTotalMovies] = useState(0);
+  const [averageRating, setAverageRating] = useState(0);
+
+  // useEffect for dashboard stats
+  useEffect(() => {
+    setTotalMovies(movies.length);
+
+    const avg =
+      movies.reduce(
+        (sum, movie) => sum + Number(movie.rating),
+        0
+      ) / movies.length;
+
+    setAverageRating(avg.toFixed(1));
+  }, [movies]);
+
+  // Add Movie
   const addMovie = (movie) => {
     setMovies([...movies, movie]);
   };
 
-  // Add to watchlist
+  // Add to Watchlist
   const addToWatchlist = (movie) => {
-    const exists = watchlist.find((m) => m.id === movie.id);
+    const exists = watchlist.find(
+      (m) => m.id === movie.id
+    );
 
     if (!exists) {
       setWatchlist([...watchlist, movie]);
-      alert("Movie added to Watchlist ");
+      alert(`${movie.title} added to Watchlist ❤️`);
     }
   };
 
-  // Delete movie
+  // Delete Movie
   const deleteMovie = (id) => {
-    setMovies(movies.filter((movie) => movie.id !== id));
-  };
-
-  // Edit movie
-  const editMovie = (id) => {
-    const newTitle = prompt("Enter new movie title:");
-
-    if (!newTitle) return;
-
     setMovies(
-      movies.map((movie) =>
-        movie.id === id
-          ? { ...movie, title: newTitle }
-          : movie
-      )
+      movies.filter((movie) => movie.id !== id)
     );
   };
 
   // Live Search
   const filteredMovies = movies.filter((movie) =>
-    movie.title.toLowerCase().includes(search.toLowerCase())
+    movie.title
+      .toLowerCase()
+      .includes(search.toLowerCase())
   );
-
-  // Dashboard Stats
-  const averageRating =
-    movies.length > 0
-      ? (
-          movies.reduce(
-            (sum, movie) => sum + Number(movie.rating),
-            0
-          ) / movies.length
-        ).toFixed(1)
-      : 0;
 
   return (
     <div>
-      <h1> Cute Movie Database </h1>
+      <h1>🎬 Cute Movie Database 🎀</h1>
 
+      {/* Dashboard */}
       <div className="stats">
-        <h3>Total Movies: {movies.length}</h3>
+        <h3>Total Movies: {totalMovies}</h3>
         <h3>Average Rating: {averageRating}</h3>
       </div>
 
+      {/* Search */}
       <input
         className="search"
         type="text"
@@ -77,16 +76,18 @@ function Browse({ watchlist, setWatchlist }) {
         onChange={(e) => setSearch(e.target.value)}
       />
 
+      {/* Add Form */}
       <AddMovieForm addMovie={addMovie} />
 
+      {/* Movie Grid */}
       <MovieGrid
         movies={filteredMovies}
         setSelectedMovie={setSelectedMovie}
         addToWatchlist={addToWatchlist}
         deleteMovie={deleteMovie}
-        editMovie={editMovie}
       />
 
+      {/* Detail View */}
       <MovieDetail movie={selectedMovie} />
     </div>
   );

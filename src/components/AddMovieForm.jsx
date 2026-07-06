@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 function AddMovieForm({ addMovie }) {
-
   const [movie, setMovie] = useState({
     title: "",
     genre: "",
@@ -21,13 +20,32 @@ function AddMovieForm({ addMovie }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Check if all fields are filled
+    if (
+      !movie.title ||
+      !movie.genre ||
+      !movie.year ||
+      !movie.director ||
+      !movie.rating
+    ) {
+      alert("Please fill all required fields!");
+      return;
+    }
+
+    // Add new movie
     addMovie({
-      ...movie,
       id: Date.now(),
+      title: movie.title,
+      genre: movie.genre,
+      year: movie.year,
+      director: movie.director,
+      rating: Number(movie.rating),
+      synopsis: movie.synopsis,
       cast: "Not Available",
-      image: "https://picsum.photos/300/400?random=" + Math.random()
+      image: `https://picsum.photos/300/400?random=${Date.now()}`
     });
 
+    // Clear form
     setMovie({
       title: "",
       genre: "",
@@ -40,64 +58,70 @@ function AddMovieForm({ addMovie }) {
 
   return (
     <form className="movie-form" onSubmit={handleSubmit}>
-
       <h2>➕ Add New Movie</h2>
 
-      <input
-        type="text"
-        name="title"
-        placeholder="Title"
-        value={movie.title}
-        onChange={handleChange}
-        required
-      />
+      <div className="form-row">
+        <input
+          type="text"
+          name="title"
+          placeholder="Movie Title"
+          value={movie.title}
+          onChange={handleChange}
+        />
 
-      <input
-        type="text"
-        name="genre"
-        placeholder="Genre"
-        value={movie.genre}
-        onChange={handleChange}
-        required
-      />
+        <input
+          type="text"
+          name="genre"
+          placeholder="Genre"
+          value={movie.genre}
+          onChange={handleChange}
+        />
+      </div>
 
-      <input
-        type="number"
-        name="year"
-        placeholder="Year"
-        value={movie.year}
-        onChange={handleChange}
-        required
-      />
+      <div className="form-row">
+        <input
+          type="number"
+          name="year"
+          placeholder="Year"
+          value={movie.year}
+          onChange={handleChange}
+        />
 
-      <input
-        type="text"
-        name="director"
-        placeholder="Director"
-        value={movie.director}
-        onChange={handleChange}
-        required
-      />
+        <input
+          type="text"
+          name="director"
+          placeholder="Director"
+          value={movie.director}
+          onChange={handleChange}
+        />
+      </div>
 
-      <input
-        type="number"
-        step="0.1"
-        name="rating"
-        placeholder="Rating"
-        value={movie.rating}
-        onChange={handleChange}
-        required
-      />
+      <div className="form-row">
+        <input
+          type="number"
+          name="rating"
+          placeholder="Rating (0-10)"
+          min="0"
+          max="10"
+          step="0.1"
+          value={movie.rating}
+          onChange={handleChange}
+        />
+      </div>
 
-      <textarea
-        name="synopsis"
-        placeholder="Synopsis"
-        value={movie.synopsis}
-        onChange={handleChange}
-      />
+      <div className="form-row">
+        <textarea
+          name="synopsis"
+          placeholder="Movie Synopsis"
+          rows="4"
+          value={movie.synopsis}
+          onChange={handleChange}
+        />
+      </div>
 
-      <button>Add Movie 💖</button>
-
+      <button type="submit">
+        Add Movie
+      </button>
     </form>
   );
 }
