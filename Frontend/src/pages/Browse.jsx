@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import initialMovies from "../data/movies";
-import MovieGrid from "../components/MovieGrid";
-import MovieDetail from "../components/MovieDetail";
-import AddMovieForm from "../components/AddMovieForm";
+import initialMovies from "../../data/movies";
+import MovieGrid from "../../components/MovieGrid";
+import MovieDetail from "../../components/MovieDetail";
+import AddMovieForm from "../../components/AddMovieForm";
 
 function Browse({ watchlist, setWatchlist }) {
   const [movies, setMovies] = useState(initialMovies);

@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { useState } from "react";
 
-import Browse from "./pages/Browse";
-import Watchlist from "./pages/Watchlist";
+import Browse from "./Frontend/pages/Browse";
+import Watchlist from "./Frontend/pages/Watchlist";
 
 import "./App.css";
 
@@ -16,7 +16,7 @@ function App() {
       {/* Navigation */}
       <nav className="navbar">
         <Link to="/">Browse</Link>
-        <Link to="/watchlist">Watchlist ❤️</Link>
+        <Link to="/watchlist">Watchlist </Link>
       </nav>
 
       <Routes>
