@@ -1,30 +1,24 @@
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
 import movies from "./data/movies.js";
 
 const app = express();
-dotenv.config();
+const PORT = 3001;
 
-// Middleware
 app.use(cors());
-
 app.use(express.json());
-app.use(cors())
-
-const PORT = process.env.PORT || 3000;
 
 
-// GET all movies
-app.get("/api/movies", (req, res) => {
+// GET ALL MOVIES
+app.get("/movies", (req, res) => {
   res.json(movies);
 });
 
 
-// GET single movie
-app.get("/api/movies/:id", (req, res) => {
+// GET SINGLE MOVIE
+app.get("/movies/:id", (req, res) => {
   const movie = movies.find(
-    (m) => m.id === Number(req.params.id)
+    m => m.id === Number(req.params.id)
   );
 
   if (!movie) {
@@ -37,12 +31,9 @@ app.get("/api/movies/:id", (req, res) => {
 });
 
 
-// POST new movie
-app.post("/api/movies", (req, res) => {
-  const newMovie = {
-    id: Date.now(),
-    ...req.body
-  };
+// ADD MOVIE
+app.post("/movies", (req, res) => {
+  const newMovie = req.body;
 
   movies.push(newMovie);
 
@@ -53,33 +44,10 @@ app.post("/api/movies", (req, res) => {
 });
 
 
-// DELETE movie
-app.delete("/api/movies/:id", (req, res) => {
-  const index = movies.findIndex(
-    (m) => m.id === Number(req.params.id)
-  );
-
-  if (index === -1) {
-    return res.status(404).json({
-      message: "Movie not found"
-    });
-  }
-
-  movies.splice(index, 1);
-
-  res.json({
-    message: "Movie deleted successfully"
-  });
-});
-
-
-app.listen(PORT, () => {
-  console.log(`Backend running on port ${PORT}`);
-});
-
-app.patch("/api/movies/:id", (req, res) => {
+// UPDATE MOVIE
+app.patch("/movies/:id", (req, res) => {
   const movie = movies.find(
-    (m) => m.id === Number(req.params.id)
+    m => m.id === Number(req.params.id)
   );
 
   if (!movie) {
@@ -94,4 +62,29 @@ app.patch("/api/movies/:id", (req, res) => {
     message: "Movie updated successfully",
     movie
   });
+});
+
+
+// DELETE MOVIE
+app.delete("/movies/:id", (req, res) => {
+  const index = movies.findIndex(
+    m => m.id === Number(req.params.id)
+  );
+
+  if (index === -1) {
+    return res.status(404).json({
+      message: "Movie not found"
+    });
+  }
+
+  const deletedMovie = movies.splice(index, 1);
+
+  res.json({
+    message: "Movie deleted successfully",
+    deletedMovie
+  });
+});
+
+app.listen(PORT, () => {
+  console.log(`Backend is running on port ${PORT}`);
 });
