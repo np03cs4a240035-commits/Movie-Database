@@ -1,18 +1,18 @@
 import * as MovieModel from '../models/movieModel.js';
 
-export function getMovies(req,res){
-    const movies = MovieModel.getAll();
+export async function getMovies(req,res){
+    const movies = await MovieModel.getAll();
     return res.status(200).json(movies);
 }
 
-export function addMovie(req,res){
+export async function addMovie(req,res){
     const movie = req.body;
-    MovieModel.add(movie);
-    return res.status(201).json({message: "Movie added successfully", "data": movie});
+    const newMovie = await MovieModel.add(movie);
+    return res.status(201).json({message: "Movie added successfully", "data": newMovie});
 }
 
-export function updateMovie(req,res){
-    const value =  MovieModel.update(parseInt(req.params.id), req.body);
+export async function updateMovie(req,res){
+    const value =  await MovieModel.update(req.params.id, req.body);
     if(value.error) {
         return res.status(404).json(value);
     }

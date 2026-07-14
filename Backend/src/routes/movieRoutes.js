@@ -6,7 +6,7 @@ const router =Router();
 
 router.get('/movies', movieController.getMovies);
 router.post('/movies',movieRules,handleMovieValidation, movieController.addMovie);
-router.patch('/movies/:id', movieController.updateMovie);
+router.put('/movies/:id', movieController.updateMovie);
 
 
 export default router;

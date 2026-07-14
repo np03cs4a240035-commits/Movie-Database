@@ -1,23 +1,30 @@
-import movies from "../../data/movies.js";
+import Movie from "../../data/movie.js";
+import { ObjectId } from "mongodb";
 
-export function getAllMovies(){
-    return movies;
+export async function getAll() {
+  return Movie.find();
 }
 
-export function add(movie){
-    movies.push(movie);
+export async function add(newMovie) {
+  return Movie.create(newMovie);
 }
 
-export function update(id, updatedMovie){
-
-     const index = movies.findIndex(movie => movie.id ==id);
-
-      if (index === -1) {
-        return { error: "Movie not found" };
+export async function update(id, updatedMovie) {
+    const updatedId = new ObjectId(id)
+  return Movie.findByIdAndUpdate(
+    id,
+    updatedMovie,
+    {
+      new: true,
+      runValidators: true,
     }
+  );
+}
 
-    movies.splice(index, 1, { ...movies[index], ...updatedMovie });
+export async function remove(id) {
+  return Movie.findByIdAndDelete(id);
+}
 
-    return { message: "Movie updated successfully" };
-
+export async function getById(id) {
+  return Movie.findById(id);
 }

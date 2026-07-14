@@ -1,6 +1,8 @@
+import Movie from "./movie.js";
+import dbConnection from "../src/config/db.js";
+
 const movies = [
   {
-    id: 1,
     title: "Barbie",
     genre: "Comedy",
     year: 2023,
@@ -11,7 +13,6 @@ const movies = [
   },
 
   {
-    id: 2,
     title: "Frozen",
     genre: "Animation",
     year: 2013,
@@ -22,7 +23,6 @@ const movies = [
   },
 
   {
-    id: 3,
     title: "Twilight",
     genre: "Romance",
     year: 2008,
@@ -33,4 +33,12 @@ const movies = [
   }
 ];
 
-export default movies;
+await dbConnection();
+
+await Movie.deleteMany();
+
+await Movie.insertMany(movies);
+
+console.log("Movies inserted successfully");
+
+process.exit();
