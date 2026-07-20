@@ -1,23 +1,42 @@
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Browse from "./pages/Browse";
 import Watchlist from "./pages/Watchlist";
 
+import { getMovies } from "./api/movieApi";
+
 import "./App.css";
 
-function App() {
-
+export default function App() {
+  const [movies, setMovies] = useState([]);
+  const [error, setError] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [watchlist, setWatchlist] = useState([]);
+
+  useEffect(() => {
+    document.title = "Movie Database";
+  }, []);
+
+  useEffect(() => {
+    async function loadMovies() {
+      try {
+        const response = await getMovies();
+        setMovies(response.data);
+      } catch (err) {
+        setError((prev) => [...prev, err.message]);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadMovies();
+  }, []);
 
   return (
     <BrowserRouter>
-
       <nav className="navbar">
-
-        <h2 className="logo">
-          🎀 Movie Database
-        </h2>
+        <h2 className="logo">🎀 Movie Database</h2>
 
         <div className="nav-links">
           <Link to="/">Browse</Link>
@@ -26,11 +45,19 @@ function App() {
             ❤️ Watchlist ({watchlist.length})
           </Link>
         </div>
-
       </nav>
 
-      <Routes>
+      {isLoading && <p style={{ textAlign: "center" }}>Loading movies...</p>}
 
+      {error.length > 0 && (
+        <div style={{ color: "red", textAlign: "center" }}>
+          {error.map((err, index) => (
+            <p key={index}>{err}</p>
+          ))}
+        </div>
+      )}
+
+      <Routes>
         <Route
           path="/"
           element={
@@ -50,11 +77,7 @@ function App() {
             />
           }
         />
-
       </Routes>
-
     </BrowserRouter>
   );
 }
-
-export default App;
