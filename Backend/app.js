@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 
 import dbConnection from "./src/config/db.js";
 import movieRoutes from "./src/routes/movieRoutes.js";
+import authRoutes from "./src/routes/authRoutes.js";
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ app.use(express.json());
 
 // Routes
 app.use(movieRoutes);
+app.use('/auth',authRoutes);
 
 // Database
 await dbConnection();
