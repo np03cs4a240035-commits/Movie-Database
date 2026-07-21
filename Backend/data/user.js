@@ -1,44 +1,47 @@
-import mangoose from "mongoose";
-import bcrypt from "bcryptjs";
+import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
-const UserSchema = new mangoose.Schema({
-    name : {
-        type: String,
-        required: true,
-        trim: true
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
     },
-    email : {
-        type: String,
-        required: true,
-        unique: true,
-        trim: true
+
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
     },
-    password : {
-        type: String,
-        required: true,
-        minlength: 6,
-        trim: true
+
+    password: {
+      type: String,
+      required: true,
+      minlength: 6,
     },
-    watchlist : {
-        type: [mangoose.Schema.Types.ObjectId],
+
+    watchlist: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
         ref: "Movie",
-        default: []
-    }
-{timestamps: true},
-)
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  }
+);
 
-const User = mangoose.model("User", userSchema);
+userSchema.pre("save", async function () {
+  if (!this.isModified("password")) {
+    return;
+  }
 
-user.pre("save", () => {
-    if(!this.isModified("password")) {
-        this.password = bcrypt.hashSync(this.password, 10);
-    }
-
-
-export default User
-
-user
-
-
-
+  this.password = await bcrypt.hash(this.password, 10);
 });
+
+const User = mongoose.model("User", userSchema);
+
+export default User;

@@ -1,44 +1,59 @@
 import mongoose from "mongoose";
 
-const movieSchema = new mongoose.Schema({
-  title: {
-    required: true,
-    type: String,
-    trim: true,
-  },
+const movieSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
 
-  genre: {
-    required: true,
-    type: String,
-    enum: ["Action", "Comedy", "Drama", "Horror", "Romance", "Sci-Fi","Animation","Fantasy","Thriller","Documentary"],
-  },
+    genre: {
+      type: String,
+      required: true,
+      enum: [
+        "Action",
+        "Comedy",
+        "Drama",
+        "Horror",
+        "Romance",
+        "Sci-Fi",
+        "Animation",
+        "Fantasy",
+        "Thriller",
+        "Documentary",
+      ],
+    },
 
-  year: {
-    required: true,
-    type: Number,
-  },
+    year: {
+      type: Number,
+      required: true,
+    },
 
-  director: {
-    required: true,
-    type: String,
-  },
+    director: {
+      type: String,
+      required: true,
+    },
 
-  rating: {
-    required: true,
-    type: Number,
-  },
+    rating: {
+      type: Number,
+      required: true,
+    },
 
-  synopsis: {
-    required: true, 
-    type: String,
-  },
+    synopsis: {
+      type: String,
+      required: true,
+    },
 
-  cast: {
-    required: true,
-    type: String,
+    cast: {
+      type: String,
+      required: true,
+    },
   },
-{timestamps: true}
-});
+  {
+    timestamps: true,
+  }
+);
 
 const Movie = mongoose.model("Movie", movieSchema);
 

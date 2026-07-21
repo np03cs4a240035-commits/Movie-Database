@@ -1,6 +1,7 @@
 import Movie from "../../data/movie.js";
 import { ObjectId } from "mongodb";
 
+
 export async function getAll() {
   return Movie.find();
 }

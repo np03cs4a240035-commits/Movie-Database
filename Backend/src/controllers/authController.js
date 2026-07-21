@@ -1,17 +1,54 @@
-import *  as AuthModel from "../models/authModel.js";
+import * as AuthModel from "../models/authModel.js";
+import { generateToken } from "../utils/auth.js";
 
 export async function registerUser(req, res) {
-    const user = await AuthModel.registerUser(req.body);
-    if(user) {
-        return res.status(201).json({message: "User registered successfully", "data": user});
-    }
-    return res.status(400).json({message: "User registration failed"});
+  try {
+    const user = await AuthModel.register(req.body);
+
+    const token = generateToken(user);
+
+    return res.status(201).json({
+      message: "User registered successfully",
+      data: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        token,
+      },
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: error.message,
+    });
+  }
 }
 
 export async function loginUser(req, res) {
-    const user = await AuthModel.registerUser(req.body);
-    if(user) {
-        return res.status(201).json({message: "User registered successfully", "data": user});
+  try {
+    const { email, password } = req.body;
+
+    const user = await AuthModel.login(email, password);
+
+    if (!user) {
+      return res.status(401).json({
+        message: "Invalid email or password",
+      });
     }
-    return res.status(400).json({message: "User registration failed"});
+
+    const token = generateToken(user);
+
+    return res.status(200).json({
+      message: "Login successful",
+      data: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        token,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
 }

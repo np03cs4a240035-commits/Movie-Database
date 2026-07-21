@@ -1,10 +1,27 @@
+import { Router } from "express";
+
 import * as AuthController from "../controllers/authController.js";
-import {Router} from 'express';
 
-const router =Router();
+import {
+  registerRules,
+  loginRules,
+  handleAuthValidation,
+} from "../validators/authValidator.js";
 
-router.post('/register', AuthController.registerUser);
-router.post('/login', AuthController.LoginUser);
+const router = Router();
+
+router.post(
+  "/register",
+  registerRules,
+  handleAuthValidation,
+  AuthController.registerUser
+);
+
+router.post(
+  "/login",
+  loginRules,
+  handleAuthValidation,
+  AuthController.loginUser
+);
 
 export default router;
-
